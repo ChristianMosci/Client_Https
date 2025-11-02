@@ -4,6 +4,8 @@
  */
 package christianmosci_progettoclienthttp;
 
+import java.io.IOException;
+
 /**
  *
  * @author mosci.christian
@@ -11,6 +13,7 @@ package christianmosci_progettoclienthttp;
 public class Form1 extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Form1.class.getName());
+    private httpClient httpClient;
 
     /**
      * Creates new form Form1
@@ -95,8 +98,35 @@ public class Form1 extends javax.swing.JFrame {
 
     private void Btn_InviaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_InviaActionPerformed
         // Bottone Invia Richiesta
-        
-        
+             try {
+            // Leggo i dati dalla form
+            String host = txt_InserisciUrl.getText().trim(); 
+            String comando = cb_Comandi.getSelectedItem().toString();
+            int porta = 80; // setto la porta del http
+
+            // Creo l’oggetto con l'host e porta
+            httpClient = new httpClient(null, null, null, host, porta);
+
+            // richiesta
+            String richiesta = comando + " / HTTP/1.1\r\n" +
+                               "Host: " + host + "\r\n" +
+                               "User-Agent: JavaHttpClient/1.0\r\n" +
+                               "Connection: close\r\n\r\n";
+
+            // Mostro la richiesta 
+            Txa_Richiesta.setText(richiesta);
+
+            // Eseguo la richiesta
+            String risposta = httpClient.eseguiRichiesta(comando, "/");
+
+            // Mostro la risposta
+            Txa_Risposta.setText(risposta);
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Richiesta inviata");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(this, "Errore! " + ex.getMessage());
+        }
         
     }//GEN-LAST:event_Btn_InviaActionPerformed
 
